@@ -1,5 +1,7 @@
 #Import Flask Library
+import os
 from flask import Flask, render_template, request, session, url_for, redirect
+from werkzeug import secure_filename
 import pymysql.cursors
 
 #Initialize the app from Flask
@@ -86,7 +88,7 @@ def registerAuth():
         return render_template('index.html')
 
 
-@app.route('/home')
+@app.route('/home') #get posts, name, and bio
 def home():
     user = session['username']
     cursor = conn.cursor();
@@ -102,7 +104,7 @@ def home():
     cursor.close()
     return render_template('home.html', username=user, posts=data, name = name, bio = bio)
 
-@app.route('/post_bio', methods=['POST'])
+@app.route('/post_bio', methods=['POST']) #change bio
 def postBio():
     username = session['username']
     cursor = conn.cursor();
@@ -113,19 +115,25 @@ def postBio():
     cursor.close()
     return redirect(url_for('home'))
 
-@app.route('/post', methods=['GET', 'POST'])
+@app.route('/post', methods=['GET', 'POST']) #make a new post
 def post():
+    print(os.getcwd())
     username = session['username']
-    cursor = conn.cursor();
-    filePath = request.form['filePath']
-    caption = request.form['caption']
-    query = 'INSERT INTO Photo (photoOwner, filePath, caption, allFollowers) VALUES(%s, %s, %s, true)'
-    cursor.execute(query, (username, filePath, caption))
-    conn.commit()
-    cursor.close()
+    path = "/Users/faisalkarim/Desktop/finstagram_python/images"
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(path, filename)) 
+        path = os.path.join(path, filename)
+        cursor = conn.cursor();
+        caption = request.form['caption']
+        query = 'INSERT INTO Photo (photoOwner, filePath, caption, allFollowers) VALUES(%s, %s, %s, true)'
+        cursor.execute(query, (username, path, caption))
+        conn.commit()
+        cursor.close()
     return redirect(url_for('home'))
 
-@app.route('/select_user')
+@app.route('/select_user') #look at a user
 def select_user():
     #check that user is logged in
     #username = session['username']
@@ -138,7 +146,7 @@ def select_user():
     cursor.close()
     return render_template('select_user.html', user_list=data)
 
-@app.route('/show_posts', methods=["GET", "POST"])
+@app.route('/show_posts', methods=["GET", "POST"]) #show posts and bio of user
 def show_posts():
     poster = request.args['poster']
     cursor = conn.cursor();
@@ -161,21 +169,6 @@ def show_posts():
 #        cursor.execute(query, (follower, followee))
 #    return render_template('request_follow, ', )
 
-@app.route("/uploadImage", methods=["POST"])
-def upload_image():
-    if request.files:
-        image_file = request.files.get("imageToUpload", "")
-        image_name = image_file.filename
-        filepath = os.path.join(IMAGES_DIR, image_name)
-        image_file.save(filepath)
-        query = "INSERT INTO Photo (timestamp, filePath) VALUES (%s, %s)"
-        with connection.cursor() as cursor:
-            cursor.execute(query, (time.strftime('%Y-%m-%d %H:%M:%S'), image_name))
-        message = "Image has been successfully uploaded."
-        return render_template("upload.html", message=message)
-    else:
-        message = "Failed to upload image."
-        return render_template("upload.html", message=message)
 @app.route('/logout')
 def logout():
     session.pop('username')

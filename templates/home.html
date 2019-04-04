@@ -8,10 +8,13 @@
 		<input type="text" name = "postBio" placeholder="Update Bio"/> </br>
 		<input type="submit" value = Post />
 	</form>
-<form action="/post" method="POST">
-	<input type="text" name = "filePath" placeholder="filePath" required/> </br>
-	<input type="text" name = "caption" placeholder="caption" required/> </br>
-	<input type="submit" value = Post />
+	<h1>Upload a Picture!</h1>
+
+    <form action="/post" method="POST" enctype = "multipart/form-data"> <!--Need to upload a picture-->
+        <input type="file" name = "file" placeholder="Upload a Picture!" required/> </br>
+        <input type="text" name = "caption" placeholder="caption" required/> </br>
+        <input type="submit" value = Post />
+    </form>
 </form>
 
 <style type="text/css">
