@@ -9,26 +9,28 @@
 	}
 </style>
 
-Here are posts by {{poster_name}}:
+<h1>{{poster_name}}</h1>
+<!---{% if followed == false %}
+<a href = "/follow" name = followee value = {{poster_name}}><strong>Follow</strong></a>
+{% else %}
+{% endif %}-->
+<br>
+<strong>Bio:</strong> {{bio[0].bio}}
+<br>
 
-<table>
-	<th>Time</th>
-	<th>Post</th>
-
+<div>
 {% for line in posts %}
-	<tr>
-		<td>{{line.timestamp}}</td>
-		<td>{{line.filePath}}</td>
-	</tr>
+		<p>{{line.filePath}}</p>
+		<p>{{line.timestamp}} {{line.caption}}</p>
 {% endfor %}
-</table>
+</div>
 
 <br>
 <br>
 <a href="/select_user">Select another user</a>
 <br>
 <br>
-<a href="/home">Post a picture</a>
+<a href="/home">Go back to your page</a>
 <br>
 <br>
 <a href="/logout">Logout</a>

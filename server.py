@@ -93,10 +93,26 @@ def home():
     query = 'SELECT timestamp, filePath, caption FROM Photo WHERE photoOwner = %s ORDER BY timestamp DESC'
     cursor.execute(query, (user))
     data = cursor.fetchall()
+    queryName ='SELECT fname, lname FROM Person WHERE username = %s'
+    cursor.execute(queryName, (user))
+    name = cursor.fetchall()
+    queryBio = 'select bio from Person where username = %s'
+    cursor.execute(queryBio,(user))
+    bio = cursor.fetchall()
     cursor.close()
-    return render_template('home.html', username=user, posts=data)
+    return render_template('home.html', username=user, posts=data, name = name, bio = bio)
 
-        
+@app.route('/post_bio', methods=['POST'])
+def postBio():
+    username = session['username']
+    cursor = conn.cursor();
+    bio = request.form['postBio']
+    query = 'UPDATE Person SET bio = %s WHERE username = %s'
+    cursor.execute(query, (bio, username))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('home'))
+
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     username = session['username']
@@ -126,12 +142,40 @@ def select_user():
 def show_posts():
     poster = request.args['poster']
     cursor = conn.cursor();
-    query = 'SELECT timestamp, filePath FROM Photo WHERE photoOwner = %s ORDER BY timestamp DESC'
+    query = 'SELECT timestamp, filePath, caption FROM Photo WHERE photoOwner = %s ORDER BY timestamp DESC'
     cursor.execute(query, poster)
     data = cursor.fetchall()
+    queryBio = 'select bio from Person where username = %s'
+    cursor.execute(queryBio, (poster))
+    bio =cursor.fetchall()
     cursor.close()
-    return render_template('show_posts.html', poster_name=poster, posts=data)
+    return render_template('show_posts.html', poster_name=poster, posts=data, bio=bio)
 
+#@app.route('/follow')
+#def follow():
+#    follower = session['username']
+#    followee = request.args(followee)
+#    cursor = conn.cursor();
+#    if follower != followee:
+#        query = 'INSERT INTO Follow values (%s, %s, false)'
+#        cursor.execute(query, (follower, followee))
+#    return render_template('request_follow, ', )
+
+@app.route("/uploadImage", methods=["POST"])
+def upload_image():
+    if request.files:
+        image_file = request.files.get("imageToUpload", "")
+        image_name = image_file.filename
+        filepath = os.path.join(IMAGES_DIR, image_name)
+        image_file.save(filepath)
+        query = "INSERT INTO Photo (timestamp, filePath) VALUES (%s, %s)"
+        with connection.cursor() as cursor:
+            cursor.execute(query, (time.strftime('%Y-%m-%d %H:%M:%S'), image_name))
+        message = "Image has been successfully uploaded."
+        return render_template("upload.html", message=message)
+    else:
+        message = "Failed to upload image."
+        return render_template("upload.html", message=message)
 @app.route('/logout')
 def logout():
     session.pop('username')
