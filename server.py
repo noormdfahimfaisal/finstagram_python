@@ -5,7 +5,7 @@ from werkzeug import secure_filename
 import pymysql.cursors
 
 #Initialize the app from Flask
-app = Flask(__name__)
+app = Flask(__name__, static_folder="/Users/faisalkarim/Desktop/finstagram_python/static")
 
 #Configure MySQL
 conn = pymysql.connect(host='localhost',
@@ -119,16 +119,18 @@ def postBio():
 def post():
     print(os.getcwd())
     username = session['username']
-    path = "/Users/faisalkarim/Desktop/finstagram_python/images"
+    path = "/Users/faisalkarim/Desktop/finstagram_python/static"
+    stat = "/static"
     if request.method == 'POST':
         file = request.files['file']
         filename = secure_filename(file.filename)
         file.save(os.path.join(path, filename)) 
         path = os.path.join(path, filename)
+        stat = os.path.join(stat, filename)
         cursor = conn.cursor();
         caption = request.form['caption']
         query = 'INSERT INTO Photo (photoOwner, filePath, caption, allFollowers) VALUES(%s, %s, %s, true)'
-        cursor.execute(query, (username, path, caption))
+        cursor.execute(query, (username, stat, caption))
         conn.commit()
         cursor.close()
     return redirect(url_for('home'))
