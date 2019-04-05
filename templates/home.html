@@ -4,13 +4,14 @@
 <body>
 	<h1>Welcome, {{name[0].fname}} {{name[0].lname}}</h1>
 	<p><strong>Bio: </strong>{{bio[0].bio}}</p>
+	<a href = "/follow">Follow someone!</a>
 	<form action="/post_bio" method="POST">
 		<input type="text" name = "postBio" placeholder="Update Bio"/> </br>
 		<input type="submit" value = Post />
 	</form>
 	<h1>Upload a Picture!</h1>
 
-    <form action="/post" method="POST" enctype = "multipart/form-data"> <!--Need to upload a picture-->
+    <form action="/post" method="POST" enctype = "multipart/form-data">
         <input type="file" name = "file" placeholder="Upload a Picture!" required/> </br>
         <input type="text" name = "caption" placeholder="caption" required/> </br>
         <input type="submit" value = Post />
@@ -26,8 +27,10 @@
 Here are your posts:
 <div>
 {% for line in posts %}
+		<p>{{line.photoID}}</p>
 		<img src = {{line.filePath}}>
 		<p>{{line.timestamp}} {{line.caption}}</p>
+		<a href="/tag" name = {{line.photoID}}>See who was tagged!</a>
 {% endfor %}
 </div>
 

@@ -92,7 +92,7 @@ def registerAuth():
 def home():
     user = session['username']
     cursor = conn.cursor();
-    query = 'SELECT timestamp, filePath, caption FROM Photo WHERE photoOwner = %s ORDER BY timestamp DESC'
+    query = 'SELECT photoID, timestamp, filePath, caption FROM Photo WHERE photoOwner = %s ORDER BY timestamp DESC'
     cursor.execute(query, (user))
     data = cursor.fetchall()
     queryName ='SELECT fname, lname FROM Person WHERE username = %s'
@@ -103,6 +103,34 @@ def home():
     bio = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=user, posts=data, name = name, bio = bio)
+
+@app.route("/follow", methods=['GET'])
+def follow():
+    return render_template("follow.html")
+
+@app.route('/followAuth', methods=['GET', 'POST'])
+def followAuth():
+    username = session['username']
+    cursor = conn.cursor();
+    followee = request.form['followee']
+    query = 'select * from Person where username = %s'
+    cursor.execute(query, (followee))
+    checker = cursor.fetchall()
+    if checker.length == 0:
+        cursor.close()
+        return render_template('follow.html', error = "This person does not exist!")
+    else:
+        queryFollow = 'select * from Follow where followerUsername = %s and followeeUsername = %s'
+        cursor.execute(queryFollow, (username, followee))
+        isFollowed = cursor.fetchone()
+        if isFollowed == 0:
+            queryWillFollow = "insert into Follow values (%s, %s, false)"
+            cursor.execute(queryWillFollow, (username, followee))
+            cursor.close()
+            return render_template('follow.html', error = "you have requested a Follow.")
+        cursor.close()
+        return render_template('follow.html', error = "You are already requested to follow this person!")
+
 
 @app.route('/post_bio', methods=['POST']) #change bio
 def postBio():
@@ -160,16 +188,6 @@ def show_posts():
     bio =cursor.fetchall()
     cursor.close()
     return render_template('show_posts.html', poster_name=poster, posts=data, bio=bio)
-
-#@app.route('/follow')
-#def follow():
-#    follower = session['username']
-#    followee = request.args(followee)
-#    cursor = conn.cursor();
-#    if follower != followee:
-#        query = 'INSERT INTO Follow values (%s, %s, false)'
-#        cursor.execute(query, (follower, followee))
-#    return render_template('request_follow, ', )
 
 @app.route('/logout')
 def logout():
