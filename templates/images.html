@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Finstagram</title>
+    </head>
+    <body>
+        <h1>Your Image Gallery</h1>
+        <div>
+            {% for image in images %}
+				<p><strong>Photo ID: {{image.photoID}}</strong></p>
+				<img src="/image/{{image.filePath}}" width="400"/>
+				<p>Caption: {{image.caption}} <br> Time posted: {{image.timestamp}}</p>
+				<a href = "/tag">Tag a friend to this photo</a>&nbsp&nbsp
+				<a href="/tagged" name = {{image.photoID}}>See who is tagged in this photo</a><br><br>
+				{% if image.allFollowers == 0 %}
+					This picture is private. <br>
+					<a href="/shareWithGroup">Share it with a Close Friend Group</a>
+				{% endif %}
+				<br><br><br>
+            {% endfor %}
+        </div>
+        <a href="/">Go back to your home page</a>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+<html>
+<head>
+</head>
+<body>
+
+<div>
+<h1>Here are the people you are trying to follow/are following:</h1>
+{% for line in data %}
+	{% if line.acceptedfollow == 1 %}
+        <p>{{line.followeeUsername}}</p>
+	{% else %}
+		<p>{{line.followeeUsername}} - Request Not Accepted Yet</p>
+	{% endif %}
+{% endfor %}
+</div>
+<br>
+<a href="/home">Go back to your home page</a>
+<br>
+
+</body>
+
+</html>
+                   

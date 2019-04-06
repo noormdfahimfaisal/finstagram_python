@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>Image Upload</title>
+    </head>
+    <body>
+        <h1>Upload an Image!</h1>
+        <div>
+            <form action="/uploadImage" method="post" enctype="multipart/form-data">
+                <input type="file" name="imageToUpload" accept="image/*" required/>
+                <br/>
+				<input type="text" name = "caption" placeholder="Caption" required/> </br>
+				Do you want to share this photo with all of your followers? <br> 
+				<input type="radio" name="share" value= "yes" required/> Yes <br>
+				<input type="radio" name="share" value="no"> No <br>
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+        {% if message %}
+            {{ message }}
+        {% endif %}
+        <br><br><Br>
+        <a href="/">Go back to your home page</a>
+    </body>
+</html>

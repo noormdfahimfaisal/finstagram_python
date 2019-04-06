@@ -3,21 +3,20 @@
 </head>
 <body>
 
-<style type="text/css">
-	table, th, td{
-		border: 1px solid black;
-	}
-</style>
 
-<h1>{{poster_name}}</h1>
-<br>
-<strong>Bio:</strong> {{bio[0].bio}}
-<br>
+<h1>Here are the public posts made by {{name.fname}} {{name.lname}}:</h1>
+
 
 <div>
 {% for line in posts %}
-		<p>{{line.filePath}}</p>
-		<p>{{line.timestamp}} {{line.caption}}</p>
+	{% if line.allFollowers == 1 %}
+		<p><strong>Photo ID: {{line.photoID}}</strong></p>
+		<img src="/image/{{line.filePath}}" width="400"/>
+		<p>Caption: {{line.caption}} <br> Time posted: {{line.timestamp}}</p>
+		<a href = "/tag">Tag a friend to this photo</a>&nbsp&nbsp
+		<a href="/tagged" name = {{line.photoID}}>See who is tagged in this photo</a>
+		<br><br><br>
+	{% endif %}
 {% endfor %}
 </div>
 
@@ -26,7 +25,7 @@
 <a href="/select_user">Select another user</a>
 <br>
 <br>
-<a href="/home">Go back to your page</a>
+<a href="/home">Go back to your home page</a>
 <br>
 <br>
 <a href="/logout">Logout</a>

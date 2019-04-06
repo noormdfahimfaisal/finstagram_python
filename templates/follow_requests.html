@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Follow Requests</title>
+</head>
+<body>
+    <h1>Here are the people trying to follow you:</h1>
+    {% for line in data %}
+        <p>{{line.followerUsername}}</p>
+        <a href = "/accept_follow/{{line.followerUsername}}">Accept Follow Request</a>
+		&nbsp
+		<a href = "/reject_follow/{{line.followerUsername}}">Reject Follow Request</a>
+		<br><br>
+    {% endfor %}
+	
+<br><br>
+<a href="/home">Go back to your home page</a>
+<br>
+</body>
+</html>

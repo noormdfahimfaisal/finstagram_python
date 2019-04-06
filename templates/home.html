@@ -1,39 +1,33 @@
 <html>
 <head>
+	<title>Home</title>
 </head>
 <body>
-	<h1>Welcome, {{name[0].fname}} {{name[0].lname}}</h1>
-	<p><strong>Bio: </strong>{{bio[0].bio}}</p>
+	<h1>Welcome, {{name.fname}} {{name.lname}}</h1>
+	<p><strong>Bio: </strong>{{bio.bio}}</p>
+	
 	<form action="/post_bio" method="POST">
 		<input type="text" name = "postBio" placeholder="Update Bio"/> </br>
 		<input type="submit" value = Post />
 	</form>
-	<h1>Upload a Picture!</h1>
-
-    <form action="/post" method="POST" enctype = "multipart/form-data"> <!--Need to upload a picture-->
-        <input type="file" name = "file" placeholder="Upload a Picture!" required/> </br>
-        <input type="text" name = "caption" placeholder="caption" required/> </br>
-        <input type="submit" value = Post />
-    </form>
-</form>
-
-<style type="text/css">
-	table, th, td{
-		border: 1px solid black;
-	}
-</style>
-
-Here are your posts:
-<div>
-{% for line in posts %}
-		<img src = {{line.filePath}}>
-		<p>{{line.timestamp}} {{line.caption}}</p>
-{% endfor %}
-</div>
-
-<a href="/select_user">Select a user</a>
-<br>
-<a href="/logout">Logout</a>
+	<br>
+	
+	<ul>
+	<li><a href = "/view_followee">People you are trying to follow/are following</a></li><br>
+	<li><a href = "/followers">Your followers</a></li><br>                     
+	<li><a href = "/follow_requests">Your Follow Requests</a></li><br>
+	<li><a href = "/follow">Follow someone!<br></a></li><br>
+	</ul>
+	
+	<a href="/upload"><h2>Upload a Picture!</h2></a>
+	<br>
+	<br>
+	<a href="/images">View your posts</a>
+	<br><br>
+	<a href="/select_user">See what your friends have posted</a><br><br>
+	<a href="/cfgroups">Your Close Friend Groups</a>
+	<br><br><br><br>
+	<a href="/logout">Logout</a>
 
 </body>
 
