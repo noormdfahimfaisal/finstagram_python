@@ -1,0 +1,25 @@
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Follow</title>
+</head>
+<body>
+    <form action="/followAuth" method="POST">
+        <input type="text" name = "followee" placeholder="Find a person to follow"/> </br>
+        <input type="submit" value = Request />
+        {% if error %}
+		    <p class="error">{{error}}</p>
+	    {% endif %}
+		{% if message %}
+            {{ message }}
+        {% endif %}
+    </form>
+<br>
+<a href="/home">Go back to your home page</a>
+<br>
+</body>
+</html>
