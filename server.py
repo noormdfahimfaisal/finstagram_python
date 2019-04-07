@@ -214,15 +214,16 @@ def postBio():
 def upload():
     return render_template("upload.html")
 
-@app.route("/images", methods=["GET"])
+@app.route("/myImages", methods=["GET"])
 @login_required
-def images():
+def myImages():
     username = session['username']
     query = "SELECT * FROM photo WHERE photoOwner = %s ORDER BY timestamp DESC"
     with conn.cursor() as cursor:
         cursor.execute(query, username)
     data = cursor.fetchall()
-    return render_template("images.html", images=data)
+    return render_template("my_images.html", images=data)
+
 
 @app.route("/image/<image_name>", methods=["GET"])
 def image(image_name):
